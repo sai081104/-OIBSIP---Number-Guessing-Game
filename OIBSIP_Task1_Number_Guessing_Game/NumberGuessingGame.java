@@ -1,32 +1,55 @@
-import java.util.Scanner;
+import javax.swing.*;
 import java.util.Random;
 
 public class NumberGuessingGame {
+
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        Random rand = new Random();
-        int numberToGuess = rand.nextInt(100) + 1;
-        int guess;
-        int attempts = 0;
+        int score = 0;
+        int rounds = 3;
 
-        System.out.println("🎯 Welcome to Number Guessing Game!");
-        System.out.println("Guess a number between 1 and 100");
+        JOptionPane.showMessageDialog(null, "Welcome to the Number Guessing Game!");
 
-        do {
-            System.out.print("Enter your guess: ");
-            guess = sc.nextInt();
-            attempts++;
+        for (int round = 1; round <= rounds; round++) {
+            int randomNumber = new Random().nextInt(100) + 1;
+            int attempts = 5;
+            boolean isGuessed = false;
 
-            if (guess < numberToGuess) {
-                System.out.println("Too low! Try again.");
-            } else if (guess > numberToGuess) {
-                System.out.println("Too high! Try again.");
-            } else {
-                System.out.println("🎉 Congratulations! You guessed it in " + attempts + " attempts.");
+            JOptionPane.showMessageDialog(null, "Round " + round + " - Guess a number between 1 and 100. You have " + attempts + " attempts.");
+
+            while (attempts > 0) {
+                String input = JOptionPane.showInputDialog("Enter your guess:");
+                
+                if (input == null) {
+                    JOptionPane.showMessageDialog(null, "Game exited.");
+                    System.exit(0);
+                }
+
+                try {
+                    int guess = Integer.parseInt(input);
+
+                    if (guess == randomNumber) {
+                        JOptionPane.showMessageDialog(null, "Correct! You guessed the number.");
+                        score += attempts * 10;
+                        isGuessed = true;
+                        break;
+                    } else if (guess < randomNumber) {
+                        JOptionPane.showMessageDialog(null, "The number is higher. Attempts left: " + (attempts - 1));
+                    } else {
+                        JOptionPane.showMessageDialog(null, "The number is lower. Attempts left: " + (attempts - 1));
+                    }
+
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Invalid input. Please enter a number.");
+                }
+
+                attempts--;
             }
 
-        } while (guess != numberToGuess);
+            if (!isGuessed) {
+                JOptionPane.showMessageDialog(null, "You ran out of attempts! The number was: " + randomNumber);
+            }
+        }
 
-        sc.close();
+        JOptionPane.showMessageDialog(null, "Game Over! Your total score is: " + score);
     }
 }
